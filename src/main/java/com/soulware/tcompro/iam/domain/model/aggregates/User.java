@@ -20,6 +20,10 @@ public class User {
     private EmailAddress email;
 
     @Embedded
+    @AttributeOverride(
+            name = "value",
+            column = @Column(name = "password", nullable = false)
+    )
     private Password passwordHash;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -35,11 +39,13 @@ public class User {
     public User(
             String email,
             String passwordHash,
-            Role role
+            Role role,
+            Profile profileId
     ){
         this.email = new EmailAddress(email);
         this.passwordHash = new Password(passwordHash);
         this.role = role;
+        this.profileId = profileId;
     }
 
     public void changePassword(Password password) {
