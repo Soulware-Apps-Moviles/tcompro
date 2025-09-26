@@ -5,9 +5,8 @@ import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
 
 @Embeddable
-public record Money(BigDecimal amount, String currency) {
-    public Money(BigDecimal amount, String currency) {
+public record Money(BigDecimal amount) {
+    public Money(BigDecimal amount) {
         this.amount = amount;
-        this.currency = currency;
     }
 }
