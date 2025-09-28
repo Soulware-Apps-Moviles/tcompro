@@ -1,20 +1,25 @@
 package com.soulware.tcompro.iam.domain.model.aggregates;
 
+import com.soulware.tcompro.iam.domain.model.valueobjects.AuthId;
 import com.soulware.tcompro.iam.domain.model.valueobjects.ProfileId;
-import com.soulware.tcompro.shared.domain.model.valueobjects.CreateAudit;
-import com.soulware.tcompro.shared.domain.model.valueobjects.UpdateAudit;
-import com.soulware.tcompro.shared.domain.model.valueobjects.EmailAddress;
-import com.soulware.tcompro.shared.domain.model.valueobjects.PersonName;
-import com.soulware.tcompro.shared.domain.model.valueobjects.PhoneNumber;
+import com.soulware.tcompro.shared.domain.model.valueobjects.*;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Entity
-@Table(name = "profiles")
-@Inheritance(strategy = InheritanceType.JOINED)
+import java.util.Date;
+
+
+@EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass
+@Getter
 public abstract class Profile {
 
-    @EmbeddedId
-    private ProfileId id;
+    @Embedded
+    private AuthId authId;
 
     @Embedded
     private PersonName name;
@@ -23,12 +28,23 @@ public abstract class Profile {
     private EmailAddress email;
 
     @Embedded
+    @Nullable
     private PhoneNumber phone;
 
-    @Embedded
-    private UpdateAudit updateAt;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Date createdAt;
+    @LastModifiedDate
+    @Column(nullable = false)
+    private Date updatedAt;
 
-    @Embedded
-    private CreateAudit createAt;
+    public Profile(AuthId authId, PersonName name, EmailAddress email, @Nullable PhoneNumber phone) {
+        this.authId = authId;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
 
+
+    protected Profile() {}
 }

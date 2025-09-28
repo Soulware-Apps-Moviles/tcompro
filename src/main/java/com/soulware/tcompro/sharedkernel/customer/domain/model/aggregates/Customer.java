@@ -1,8 +1,13 @@
 package com.soulware.tcompro.sharedkernel.customer.domain.model.aggregates;
 
 import com.soulware.tcompro.iam.domain.model.aggregates.Profile;
+import com.soulware.tcompro.iam.domain.model.valueobjects.AuthId;
 import com.soulware.tcompro.iam.domain.model.valueobjects.ProfileId;
+import com.soulware.tcompro.shared.domain.model.valueobjects.EmailAddress;
+import com.soulware.tcompro.shared.domain.model.valueobjects.PersonName;
+import com.soulware.tcompro.shared.domain.model.valueobjects.PhoneNumber;
 import com.soulware.tcompro.sharedkernel.customer.domain.model.valueobjects.CustomerId;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,11 +24,11 @@ public class Customer extends Profile {
     @EmbeddedId
     private CustomerId id;
 
-    @Embedded
-    @AttributeOverride(
-            name = "value",
-            column = @Column(name = "profile_id", nullable = false)
-    )
-    private ProfileId profileId;
+    protected Customer() {}
+
+    public Customer(CustomerId customerId, AuthId authId, PersonName personName, EmailAddress email, @Nullable PhoneNumber phone) {
+        super(authId, personName, email, phone);
+        this.id = customerId;
+    }
 
 }
