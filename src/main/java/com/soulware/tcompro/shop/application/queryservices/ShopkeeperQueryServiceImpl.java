@@ -29,7 +29,7 @@ public class ShopkeeperQueryServiceImpl implements ShopkeeperQueryService {
     }
 
     @Override
-    public Optional<List<Shopkeeper>> handle(GetAllShopkeepersByShopIdQuery query){
+    public List<Shopkeeper> handle(GetAllShopkeepersByShopIdQuery query){
         return shopkeeperRepository.findAllByShopId(new ShopId(query.shopId()));
     }
 }

@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TrustedCustomerQueryService {
-    Optional<List<TrustedCustomer>>  handle(GetTrustedCustomerByCustomerIdQuery query);
-    Optional<List<TrustedCustomer>> handle(GetAllTrustedCustomersByShopIdQuery query);
+    List<TrustedCustomer> handle(GetTrustedCustomerByCustomerIdQuery query);
+    List<TrustedCustomer> handle(GetAllTrustedCustomersByShopIdQuery query);
 }

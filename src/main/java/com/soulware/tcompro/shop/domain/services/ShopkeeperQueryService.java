@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface ShopkeeperQueryService {
     Optional<Shopkeeper> handle(GetShopkeeperByEmailAddressQuery query);
-    Optional<List<Shopkeeper>> handle(GetAllShopkeepersByShopIdQuery query);
+    List<Shopkeeper> handle(GetAllShopkeepersByShopIdQuery query);
 }

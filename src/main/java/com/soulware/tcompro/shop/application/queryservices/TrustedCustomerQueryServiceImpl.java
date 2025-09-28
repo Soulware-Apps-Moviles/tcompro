@@ -21,12 +21,12 @@ public class TrustedCustomerQueryServiceImpl implements TrustedCustomerQueryServ
     }
 
     @Override
-    public Optional<List<TrustedCustomer>> handle(GetTrustedCustomerByCustomerIdQuery query){
+    public List<TrustedCustomer> handle(GetTrustedCustomerByCustomerIdQuery query){
         return trustedCustomerRepository.findAllByCustomerId(new CustomerId(query.customerId()));
     }
 
     @Override
-    public Optional<List<TrustedCustomer>> handle(GetAllTrustedCustomersByShopIdQuery query){
+    public List<TrustedCustomer> handle(GetAllTrustedCustomersByShopIdQuery query){
         return trustedCustomerRepository.findAllByShopId(new ShopId(query.shopId()));
     }
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface TrustedCustomerRepository extends JpaRepository<TrustedCustomer, Long> {
-    Optional<List<TrustedCustomer>> findAllByCustomerId(CustomerId customerId);
-    Optional<List<TrustedCustomer>> findAllByShopId(ShopId shopId);
+    List<TrustedCustomer> findAllByCustomerId(CustomerId customerId);
+    List<TrustedCustomer> findAllByShopId(ShopId shopId);
 
 }

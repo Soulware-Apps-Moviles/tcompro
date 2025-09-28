@@ -10,7 +10,6 @@ import com.soulware.tcompro.shop.interfaces.rest.assemblers.ShopResourceFromEnti
 import com.soulware.tcompro.shop.interfaces.rest.resources.CreateShopResource;
 import com.soulware.tcompro.shop.interfaces.rest.resources.ShopResource;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
