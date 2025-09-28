@@ -1,12 +1,16 @@
 package com.soulware.tcompro.shop.domain.model.aggregates;
 
+import com.soulware.tcompro.shared.domain.model.valueobjects.Money;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ShopId;
-import com.soulware.tcompro.shop.domain.model.entities.Policy;
+import com.soulware.tcompro.sharedkernel.policies.domain.model.entities.PaymentMethod;
+import com.soulware.tcompro.sharedkernel.policies.domain.model.entities.PickupMethod;
 import com.soulware.tcompro.shop.domain.model.valueobjects.OwnerId;
-import com.soulware.tcompro.shop.domain.model.valueobjects.PolicyId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "shops")
@@ -24,14 +28,26 @@ public class Shop {
     )
     private OwnerId owner;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Policy policy;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<PaymentMethod> paymentMethods = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<PickupMethod> pickupMethods = new ArrayList<>();
+
+    @Embedded
+    private Money maxCreditPerCustomer;
 
     protected Shop () {}
 
-    public Shop(OwnerId owner,  Policy policy) {
+    public Shop(ShopId id,
+                OwnerId owner,
+                List<PaymentMethod> paymentMethods,
+                List<PickupMethod> pickupMethods,
+                Money maxCreditPerCustomer) {
+        this.id = id;
         this.owner = owner;
-        this.policy = policy;
+        this.paymentMethods = paymentMethods;
+        this.pickupMethods = pickupMethods;
+        this.maxCreditPerCustomer = maxCreditPerCustomer;
     }
-
 }

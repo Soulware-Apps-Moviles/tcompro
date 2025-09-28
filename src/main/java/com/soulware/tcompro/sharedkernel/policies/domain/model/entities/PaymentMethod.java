@@ -20,4 +20,8 @@ public class PaymentMethod {
     @Column(nullable = false, length = 20)
     private PaymentMethods name;
 
+    public String getStringName(){
+        return this.name.toString();
+    }
+
 }

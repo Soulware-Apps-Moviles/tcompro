@@ -19,4 +19,8 @@ public class PickupMethod {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private PickupMethods type;
+
+    public String getStringName(){
+        return type.toString();
+    }
 }

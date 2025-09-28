@@ -37,10 +37,11 @@ public class TrustedCustomer {
 
     protected TrustedCustomer(){}
 
-    public TrustedCustomer(TrustedCustomerId id, Money creditLimit, CustomerId customerId) {
+    public TrustedCustomer(TrustedCustomerId id, Money creditLimit, CustomerId customerId, ShopId shopId) {
         this.id = id;
         this.creditLimit = creditLimit;
         this.customerId = customerId;
+        this.shopId = shopId;
         this.isTrusted = true;
     }
 
