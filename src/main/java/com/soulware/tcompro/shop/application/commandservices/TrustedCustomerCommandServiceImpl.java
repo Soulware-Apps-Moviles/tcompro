@@ -46,7 +46,7 @@ public class TrustedCustomerCommandServiceImpl implements TrustedCustomerCommand
         Shop shop = shopRepository.findById(new ShopId(command.shopId()))
                 .orElseThrow(() -> new RuntimeException("Shop with id " + command.shopId() + " not found"));
 
-        BigDecimal creditLimit = BigDecimal.ZERO;
+        BigDecimal creditLimit = shop.getMaxCreditPerCustomer().amount();
 
         if (command.creditLimit() != null) creditLimit = command.creditLimit();
 
