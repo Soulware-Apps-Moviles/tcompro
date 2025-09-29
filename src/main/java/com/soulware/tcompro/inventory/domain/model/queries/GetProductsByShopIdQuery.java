@@ -1,4 +1,6 @@
 package com.soulware.tcompro.inventory.domain.model.queries;
 
-public record GetProductsByShopIdQuery(Long shopId) {
+import jakarta.validation.constraints.Null;
+
+public record GetProductsByShopIdQuery(Long shopId, @Null Boolean isAvailable, @Null String category) {
 }

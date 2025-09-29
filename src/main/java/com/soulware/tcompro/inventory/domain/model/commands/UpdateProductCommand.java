@@ -4,5 +4,5 @@ import jakarta.validation.constraints.Null;
 
 import java.math.BigDecimal;
 
-public record AddProductCommand(Long shopId, @Null BigDecimal price, Long catalogProductId) {
+public record UpdateProductCommand(Long productId, @Null BigDecimal price, @Null Boolean isAvailable) {
 }

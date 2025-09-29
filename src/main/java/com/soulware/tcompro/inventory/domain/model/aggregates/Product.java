@@ -48,6 +48,7 @@ public class Product {
         this.shopId = shopId;
         this.catalogProductId = catalogProductId;
         this.price = price;
+        this.isAvailable = true;
     }
 
     public void changePrice(Money price){

@@ -1,14 +1,17 @@
 package com.soulware.tcompro.shop.application.queryservices;
 
+import com.soulware.tcompro.inventory.infrastructure.persistence.jpa.repositories.ProductRepository;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ShopId;
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
 import com.soulware.tcompro.shop.domain.model.queries.GetShopByOwnerIdQuery;
 import com.soulware.tcompro.shop.domain.model.queries.GetShopIdByIdQuery;
+import com.soulware.tcompro.shop.domain.model.queries.GetShopsByProductsIdQuery;
 import com.soulware.tcompro.shop.domain.model.valueobjects.OwnerId;
 import com.soulware.tcompro.shop.domain.services.ShopQueryService;
 import com.soulware.tcompro.shop.infrastructure.persistence.jpa.repositories.ShopRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,5 +36,10 @@ public class ShopQueryServiceImpl implements ShopQueryService {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Shop with owner id " + query.ownerId() + " does not exist"
                 )));
+    }
+
+    @Override
+    public List<Shop> handle(GetShopsByProductsIdQuery query){
+        return shopRepository.findShopsWithAllCatalogProducts(query.productIds(),query.productIds().size());
     }
 }

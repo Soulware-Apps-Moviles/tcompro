@@ -3,11 +3,13 @@ package com.soulware.tcompro.shop.interfaces.rest.controllers;
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
 import com.soulware.tcompro.shop.domain.model.queries.GetShopByOwnerIdQuery;
 import com.soulware.tcompro.shop.domain.model.queries.GetShopIdByIdQuery;
+import com.soulware.tcompro.shop.domain.model.queries.GetShopsByProductsIdQuery;
 import com.soulware.tcompro.shop.domain.services.ShopCommandService;
 import com.soulware.tcompro.shop.domain.services.ShopQueryService;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.CreateShopCommandFromResourceAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.ShopResourceFromEntityAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.resources.CreateShopResource;
+import com.soulware.tcompro.shop.interfaces.rest.resources.ProductListResource;
 import com.soulware.tcompro.shop.interfaces.rest.resources.ShopResource;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -54,5 +57,16 @@ public class ShopController {
         return shop
                 .map(source -> new ResponseEntity<>(ShopResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.CREATED))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/by-products")
+    public ResponseEntity<List<ShopResource>> getShopsByProducts(@RequestBody ProductListResource resource){
+        var query  = new GetShopsByProductsIdQuery(resource.ids());
+        List<Shop> shops = shopQueryService
+                .handle(query);
+        List<ShopResource> resources = shops.stream()
+                .map(ShopResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(resources);
     }
 }

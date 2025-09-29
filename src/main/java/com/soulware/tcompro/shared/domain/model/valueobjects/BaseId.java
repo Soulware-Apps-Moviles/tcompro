@@ -21,4 +21,10 @@ public abstract class BaseId {
         }
         this.value = value;
     }
+
+
+    public Long getValue() {
+        return value;
+    }
+
 }
