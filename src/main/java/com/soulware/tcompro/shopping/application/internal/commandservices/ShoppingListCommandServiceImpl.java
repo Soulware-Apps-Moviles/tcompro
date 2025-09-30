@@ -17,7 +17,7 @@ import com.soulware.tcompro.shopping.domain.model.valueobjects.ShoppingListId;
 import com.soulware.tcompro.shopping.domain.model.valueobjects.ShoppingListItemId;
 import com.soulware.tcompro.shopping.domain.services.ShoppingListCommandService;
 import com.soulware.tcompro.shopping.infrastructure.persistence.jpa.repositories.ShoppingListRepository;
-import org.springframework.data.util.Pair;
+import com.soulware.tcompro.shared.domain.model.valueobjects.PairResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
                 ));
 
         List<Long> productIds = command.items().stream()
-                .map(Pair::getFirst)
+                .map(PairResource::getProductCatalogId)
                 .toList();
 
         List<ProductCatalog> productCatalogs = productCatalogRepository.findAllByIds(productIds);
@@ -63,8 +63,8 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
 
         List<ShoppingListItem> items = command.items().stream()
                 .map(pair -> {
-                    Long catalogId = pair.getFirst();
-                    Integer qty = pair.getSecond();
+                    Long catalogId = pair.getProductCatalogId();
+                    Integer qty = pair.getQuantity();
 
                     ProductCatalog pc = productCatalogs.stream()
                             .filter(p -> p.getId().getValue().equals(catalogId))
@@ -114,12 +114,13 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
                 ));
 
         if (command.item() != null){
-            ProductCatalog productCatalog = productCatalogRepository.findById(new CatalogProductId(command.item().getFirst()))
+            ProductCatalog productCatalog = productCatalogRepository.findById(new CatalogProductId(command.item().getProductCatalogId()))
                     .orElseThrow(() -> new IllegalArgumentException(
-                            "Catalog product with id " + command.item().getFirst() + " does not exist"
+                            "Catalog product with id " + command.item().getProductCatalogId() + " does not exist"
                     ));
             if (shoppingList.isInList(productCatalog.getId())){
-                shoppingList.removeItem(new CatalogProductId(command.item().getFirst()));
+                shoppingList.removeItem(new CatalogProductId(command.item().getProductCatalogId()));
+                shoppingListRepository.save(shoppingList);
             }else {
                 shoppingList.addItem(
                         new ShoppingListItem(
@@ -127,9 +128,10 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
                                 productCatalog.getId(),
                                 productCatalog.getProductInformation(),
                                 productCatalog.getPrice(),
-                                new Quantity(command.item().getSecond())
+                                new Quantity(command.item().getQuantity())
                         )
                 );
+                shoppingListRepository.save(shoppingList);
             }
         }
         if (command.name() != null) shoppingList.renameList(command.name());

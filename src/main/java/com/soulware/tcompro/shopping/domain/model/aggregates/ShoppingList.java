@@ -28,7 +28,7 @@ public class ShoppingList {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "shopping_list_id", nullable = false)
     private List<ShoppingListItem> items;
 

@@ -32,7 +32,7 @@ public class FavoriteProductController {
     }
 
     @PostMapping
-    public ResponseEntity<FavoriteProductResource> createFavoriteProduct(CreateFavoriteProductResource resource){
+    public ResponseEntity<FavoriteProductResource> createFavoriteProduct(@RequestBody CreateFavoriteProductResource resource){
         Optional<FavoriteProduct> favoriteProduct = favoriteProductCommandService
                 .handle(CreateFavoriteProductCommandFromResourceAssembler.toCommandFromResource(resource));
         return favoriteProduct
@@ -40,10 +40,10 @@ public class FavoriteProductController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Long> deleteFavoriteProduct(DeleteFavoriteProductResource resource){
+    @DeleteMapping("{id}")
+    public ResponseEntity<Long> deleteFavoriteProduct(@PathVariable Long id){
         Optional<Long> favoriteProductId = favoriteProductCommandService
-                .handle(DeleteFavoriteProductCommandFromResourceAssembler.toCommandFromResource(resource));
+                .handle(DeleteFavoriteProductCommandFromResourceAssembler.toCommandFromResource(id));
         return favoriteProductId
                 .map(source -> new ResponseEntity<>(source, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));

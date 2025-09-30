@@ -5,9 +5,9 @@ import com.soulware.tcompro.shopping.interfaces.rest.resources.DeleteFavoritePro
 import com.soulware.tcompro.shopping.interfaces.rest.resources.FavoriteProductResource;
 
 public class DeleteFavoriteProductCommandFromResourceAssembler {
-    public static RemoveFavoriteProductCommand toCommandFromResource(DeleteFavoriteProductResource resource){
+    public static RemoveFavoriteProductCommand toCommandFromResource(Long id){
         return new RemoveFavoriteProductCommand(
-                resource.favoriteProductId()
+                id
         );
     }
 }
