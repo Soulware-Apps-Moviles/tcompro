@@ -62,12 +62,12 @@ public class Payment {
 
     protected Payment() {}
 
-    public Payment(CustomerId customerId, OrderId orderId, Money amount,  PaymentMethodId paymentMethodId,ShopId shopId, @Null DebtId debtId) {
+    public Payment(PaymentId id, CustomerId customerId, OrderId orderId, Money amount,  PaymentMethodId paymentMethodId,ShopId shopId) {
+        this.id = id;
         this.customerId = customerId;
         this.orderId = orderId;
         this.amount = amount;
         this.paymentMethodId = paymentMethodId;
         this.shopId = shopId;
-        this.debtId = debtId;
     }
 }

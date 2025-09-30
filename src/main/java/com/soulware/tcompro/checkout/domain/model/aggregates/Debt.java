@@ -2,6 +2,7 @@ package com.soulware.tcompro.checkout.domain.model.aggregates;
 
 import com.soulware.tcompro.checkout.domain.model.entities.DebtStatus;
 import com.soulware.tcompro.checkout.domain.model.valueobjects.DebtId;
+import com.soulware.tcompro.checkout.domain.model.valueobjects.DebtStatuses;
 import com.soulware.tcompro.shared.domain.model.valueobjects.Money;
 import com.soulware.tcompro.shared.domain.model.valueobjects.OrderId;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ShopId;
@@ -49,14 +50,26 @@ public class Debt {
 
     protected Debt() {}
 
-    public Debt(CustomerId customerId, OrderId orderId, Money amount, ShopId shopId) {
+    public Debt(DebtId id, CustomerId customerId, OrderId orderId, Money amount, ShopId shopId, DebtStatus status) {
+        this.debtId = id;
         this.customerId = customerId;
         this.orderId = orderId;
         this.amount = amount;
         this.shopId = shopId;
+        this.status = status;
     }
 
     public void changeStatus(DebtStatus newStatus) {
+        DebtStatuses current = this.status.getName();
+        DebtStatuses target = newStatus.getName();
+
+        if (!current.canTransitionTo(target)) {
+            throw new IllegalStateException(
+                    "Cannot transition from " + current + " to " + target
+            );
+        }
+
         this.status = newStatus;
     }
+
 }
