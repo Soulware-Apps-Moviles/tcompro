@@ -11,6 +11,9 @@ import com.soulware.tcompro.inventory.interfaces.rest.assemblers.UpdateProductCo
 import com.soulware.tcompro.inventory.interfaces.rest.resources.CreateProductResource;
 import com.soulware.tcompro.inventory.interfaces.rest.resources.ProductResource;
 import com.soulware.tcompro.inventory.interfaces.rest.resources.UpdateProductResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +36,11 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Create Product in shop inventory", description = "Links a catalog product to a shop's inventory")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Create product successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<ProductResource> createProduct(CreateProductResource resource) {
         Optional<Product> product = productCommandService
                 .handle(CreateProductCommandFromResourceAssembler.toCommandFromResource(resource));
@@ -42,15 +50,25 @@ public class ProductController {
     }
 
     @PatchMapping
+    @Operation(summary = "Update Product in shop inventory", description = "Update product price or availability")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Product not found")
+    })
     public ResponseEntity<ProductResource> updateProduct(UpdateProductResource resource) {
         Optional<Product> product = productCommandService
                 .handle(UpdateProductCommandFromResourceAssembler.toCommandFromResource(resource));
         return product
-                .map(source -> new ResponseEntity<>(ProductResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.CREATED))
+                .map(source -> new ResponseEntity<>(ProductResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
     @GetMapping("/by-shop/{id}")
+    @Operation(summary = "Get products from a shop with query params", description = "Get products based on shop, availability and/or category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Products found")
+    })
     public ResponseEntity<List<ProductResource>> getProductsBy(@PathVariable Long id, @RequestParam(required = false) Boolean isAvailable, @RequestParam(required = false) String category) {
         var query = new GetProductsByShopIdQuery(id, isAvailable, category);
         List<Product> products = productQueryService

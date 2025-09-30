@@ -9,6 +9,9 @@ import com.soulware.tcompro.shop.interfaces.rest.assemblers.CreateTrustedCustome
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.TrustedCustomerResourceFromEntityAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.resources.CreateTrustedCustomerResource;
 import com.soulware.tcompro.shop.interfaces.rest.resources.TrustedCustomerResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,6 +38,11 @@ public class TrustedCustomerController {
     }
 
     @PostMapping
+    @Operation(summary = "Create Trusted customer", description = "Links a customer with a shop")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Create Trusted customer successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<TrustedCustomerResource> createTrustedCustomer(CreateTrustedCustomerResource resource){
         Optional<TrustedCustomer> trustedCustomer = trustedCustomerCommandService
                 .handle(CreateTrustedCustomerCommandFromResourceAssembler.toCommandFromResource(resource));
@@ -44,6 +52,10 @@ public class TrustedCustomerController {
     }
 
     @GetMapping("/by-customer/{id}")
+    @Operation(summary = "Get trusted customers by customer id", description = "Get a list of trusted customers linked to a customer id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trusted customers found")
+    })
     public ResponseEntity<List<TrustedCustomerResource>> getTrustedCustomersByCustomerId(@PathVariable Long id){
         var query = new GetTrustedCustomerByCustomerIdQuery(id);
         List<TrustedCustomer> trustedCustomer = trustedCustomerQueryService
@@ -55,6 +67,10 @@ public class TrustedCustomerController {
     }
 
     @GetMapping("/by-shop/{id}")
+    @Operation(summary = "Get trusted customers by shop id", description = "Get a list of trusted customers linked to a shop id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Trusted customers found")
+    })
     public ResponseEntity<List<TrustedCustomerResource>> getTrustedCustomersByShopId(@PathVariable Long id){
         var query =  new GetAllTrustedCustomersByShopIdQuery( id);
         List<TrustedCustomer> trustedCustomer = trustedCustomerQueryService

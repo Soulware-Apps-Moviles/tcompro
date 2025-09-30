@@ -5,6 +5,9 @@ import com.soulware.tcompro.checkout.domain.model.queries.GetPaymentsQuery;
 import com.soulware.tcompro.checkout.domain.services.PaymentQueryService;
 import com.soulware.tcompro.checkout.interfaces.rest.assemblers.PaymentResourceFromEntityAssembler;
 import com.soulware.tcompro.checkout.interfaces.rest.resources.PaymentResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,10 @@ public class PaymentController {
     //Create Payment is called by an event, not by an endpoint
 
     @GetMapping
+    @Operation(summary = "Get payments with query params", description = "Get debts with customer and shop")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Payments found")
+    })
     ResponseEntity<List<PaymentResource>> getPayments(
             @RequestParam(required = false) Long customerId,
             @RequestParam(required = false) Long shopId){

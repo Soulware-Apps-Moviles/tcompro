@@ -7,6 +7,9 @@ import com.soulware.tcompro.catalog.domain.model.queries.GetCatalogProductByIdQu
 import com.soulware.tcompro.catalog.domain.services.ProductCatalogQueryService;
 import com.soulware.tcompro.catalog.interfaces.rest.assemblers.ProductCatalogResourceFromEntityAssembler;
 import com.soulware.tcompro.catalog.interfaces.rest.resources.ProductCatalogResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +30,10 @@ public class ProductCatalogController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get Catalog Product by his id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Catalog product found")
+    })
     public ResponseEntity<ProductCatalogResource> getCatalogProductsById(@PathVariable Long id) {
         var query = new GetCatalogProductByIdQuery(id);
         Optional<ProductCatalog> productCatalog = productCatalogQueryService
@@ -37,6 +44,10 @@ public class ProductCatalogController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all catalog products")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Catalog products found")
+    })
     public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProducts(){
         var query = new GetAllCatalogProductsQuery();
         List<ProductCatalog> productCatalogs = productCatalogQueryService
@@ -47,7 +58,12 @@ public class ProductCatalogController {
         return ResponseEntity.ok(resources);
     }
 
+
     @GetMapping("/by-category")
+    @Operation(summary = "Get all catalog products by category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Catalog products found")
+    })
     public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProductsByCategory(@RequestParam String category){
         var query = new GetAllCatalogProductsByCategoryNameQuery(category);
         List<ProductCatalog> productCatalogs = productCatalogQueryService

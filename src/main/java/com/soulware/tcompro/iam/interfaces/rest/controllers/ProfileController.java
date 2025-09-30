@@ -5,6 +5,9 @@ import com.soulware.tcompro.iam.interfaces.rest.assemblers.ProfileResourceFromEn
 import com.soulware.tcompro.iam.interfaces.rest.assemblers.SignUpCommandFromResourceAssembler;
 import com.soulware.tcompro.iam.interfaces.rest.resources.ProfileResource;
 import com.soulware.tcompro.iam.interfaces.rest.resources.SignUpResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +28,11 @@ public class ProfileController {
     }
 
     @PostMapping
+    @Operation(summary = "Sign up", description = "Sign user information, It has to be called after the call to Supabase auth")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Sign up successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<ProfileResource> signUp(@RequestBody SignUpResource signUpResource){
         var signUpCommand = SignUpCommandFromResourceAssembler.toCommandFromResource(signUpResource);
         var profile = profileCommandService.handle(signUpCommand);

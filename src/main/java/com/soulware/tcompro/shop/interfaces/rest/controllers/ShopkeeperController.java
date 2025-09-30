@@ -9,6 +9,9 @@ import com.soulware.tcompro.shop.domain.services.ShopkeeperCommandService;
 import com.soulware.tcompro.shop.domain.services.ShopkeeperQueryService;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.ShopkeeperResourceFromEntityAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.resources.ShopkeeperResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +35,12 @@ public class ShopkeeperController {
     }
 
     @PatchMapping("/rehire/{id}")
+    @Operation(summary = "Rehire a shopkeeper by his id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Rehire shopkeeper successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Shopkeeper not found")
+    })
     public ResponseEntity<ShopkeeperResource> rehireShopkeeper(@PathVariable Long id) {
         Optional<Shopkeeper> shopkeeper = shopkeeperCommandService
                 .handle(new HireShopkeeperCommand(id));
@@ -41,6 +50,12 @@ public class ShopkeeperController {
     }
 
     @PatchMapping("/fire/{id}")
+    @Operation(summary = "Fire a shopkeeper by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Fire shopkeeper successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Shopkeeper not found")
+    })
     public ResponseEntity<ShopkeeperResource> fireShopkeeper(@PathVariable Long id) {
         Optional<Shopkeeper> shopkeeper = shopkeeperCommandService
                 .handle(new FireShopkeeperCommand(id));
@@ -50,6 +65,10 @@ public class ShopkeeperController {
     }
 
     @GetMapping()
+    @Operation(summary = "Get shopkeeper by email")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Shopkeeper found")
+    })
     public ResponseEntity<ShopkeeperResource> getShopkeeperByEmailAddress(@RequestParam String email){
         var query = new GetShopkeeperByEmailAddressQuery(email);
         Optional<Shopkeeper> shopkeeper = shopkeeperQueryService
@@ -60,6 +79,10 @@ public class ShopkeeperController {
     }
 
     @GetMapping("/by-shop/{id}")
+    @Operation(summary = "Get shopkeeper by shop id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Shopkeeper found")
+    })
     public ResponseEntity<List<ShopkeeperResource>> getAllShopkeepersByShopId(@PathVariable Long id) {
         var query = new GetAllShopkeepersByShopIdQuery(id);
         List<Shopkeeper> shopkeepers = shopkeeperQueryService.handle(query);

@@ -11,6 +11,9 @@ import com.soulware.tcompro.shopping.interfaces.rest.assemblers.UpdateShoppingLi
 import com.soulware.tcompro.shopping.interfaces.rest.resources.CreateShoppingListResource;
 import com.soulware.tcompro.shopping.interfaces.rest.resources.ShoppingListResource;
 import com.soulware.tcompro.shopping.interfaces.rest.resources.UpdateShoppingListResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +39,11 @@ public class ShoppingListController {
     }
 
     @PostMapping
+    @Operation(summary = "Create Shopping list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Create Shopping list successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<ShoppingListResource> createShoppingList(@RequestBody CreateShoppingListResource resource){
         Optional<ShoppingList> shoppingList = shoppingListCommandService
                 .handle(CreateShoppingListCommandFromResourceAssembler.toCommandFromResource(resource));
@@ -45,6 +53,12 @@ public class ShoppingListController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete Shopping list by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete Shopping list successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Shopping list not found")
+    })
     public ResponseEntity<Long> deleteShoppingList(@PathVariable Long id){
         Optional<Long> shoppingListId = shoppingListCommandService
                 .handle(DeleteShoppingListCommandFromResourceAssembler.toCommandFromResource(id));
@@ -54,6 +68,12 @@ public class ShoppingListController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(summary = "Update Shopping list", description = "Update name or items of a shopping list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Update Shopping list successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Shopping list not found")
+    })
     public ResponseEntity<ShoppingListResource> updateShoppingList(@PathVariable Long id, @RequestBody UpdateShoppingListResource resource){
         Optional<ShoppingList> shoppingList = shoppingListCommandService
                 .handle(UpdateShoppingListCommandFromResourceAssembler.toCommandFromResource(id, resource));
@@ -63,6 +83,10 @@ public class ShoppingListController {
     }
 
     @GetMapping("/by-customer/{id}")
+    @Operation(summary = "Get shopping lists by customer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Shopping Lists found")
+    })
     public ResponseEntity<List<ShoppingListResource>> getAllShoppingListsByCustomer(@PathVariable Long id){
         var query = new GetAllShoppingListsByCustomerIdQuery(id);
         List<ShoppingList> shoppingLists = shoppingListQueryService

@@ -12,6 +12,9 @@ import com.soulware.tcompro.order.interfaces.rest.assemblers.CreateOrderCommandF
 import com.soulware.tcompro.order.interfaces.rest.assemblers.OrderResourceFromEntityAssembler;
 import com.soulware.tcompro.order.interfaces.rest.resources.CreateOrderResource;
 import com.soulware.tcompro.order.interfaces.rest.resources.OrderResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +37,11 @@ public class OrderController {
     }
 
     @PostMapping
+    @Operation(summary = "Create order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Create order successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<OrderResource> createOrder(@RequestBody CreateOrderResource resource){
         Optional<Order> order = orderCommandService
                 .handle(CreateOrderCommandFromResourceAssembler.toCommandFromResource(resource));
@@ -43,6 +51,12 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/accept")
+    @Operation(summary = "Accept order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Accept order successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Order not found")
+    })
     public ResponseEntity<OrderResource> acceptOrder(@PathVariable Long id){
         Optional<Order> order = orderCommandService
                 .handle(new AcceptOrderCommand(id));
@@ -52,6 +66,12 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/reject")
+    @Operation(summary = "Reject order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Reject order successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Order not found")
+    })
     public ResponseEntity<OrderResource> rejectOrder(@PathVariable Long id){
         Optional<Order> order = orderCommandService
                 .handle(new RejectOrderCommand(id));
@@ -61,6 +81,12 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/cancel")
+    @Operation(summary = "Cancel order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cancel order successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Order not found")
+    })
     public ResponseEntity<OrderResource> cancelOrder(@PathVariable Long id){
         Optional<Order> order = orderCommandService
                 .handle(new CancelOrderCommand(id));
@@ -70,6 +96,12 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/advance")
+    @Operation(summary = "Advance order", description = "Changes based on the order status.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Cancel order successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "404", description = "Order not found")
+    })
     public ResponseEntity<OrderResource> advanceOrder(@PathVariable Long id){
         Optional<Order> order = orderCommandService
                 .handle(new AdvanceOrderCommand(id));
@@ -78,8 +110,14 @@ public class OrderController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
+    //GET ORDER BY ID
+
     @GetMapping
-    public ResponseEntity<List<OrderResource>> getOrderById(
+    @Operation(summary = "Get order with query params", description = "Get products based on shop, customer and/or status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Orders found")
+    })
+    public ResponseEntity<List<OrderResource>> getAllOrders(
             @RequestParam(required = false) Long shopId,
             @RequestParam(required = false) Long customerId,
             @RequestParam(required = false) String status

@@ -5,6 +5,9 @@ import com.soulware.tcompro.shop.domain.model.queries.GetOwnerByEmailAddressQuer
 import com.soulware.tcompro.shop.domain.services.OwnerQueryService;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.OwnerResourceFromEntityAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.resources.OwnerResource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +31,10 @@ public class OwnerController {
     }
 
     @GetMapping()
+    @Operation(summary = "Get Owner by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Owner found")
+    })
     public ResponseEntity<OwnerResource> getOwnerByEmailAddress(@RequestParam String email){
         var query = new GetOwnerByEmailAddressQuery(email);
         Optional<Owner> owner = ownerQueryService
