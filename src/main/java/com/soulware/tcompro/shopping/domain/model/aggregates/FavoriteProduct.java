@@ -1,5 +1,6 @@
 package com.soulware.tcompro.shopping.domain.model.aggregates;
 
+import com.soulware.tcompro.shared.domain.model.valueobjects.CatalogProductId;
 import com.soulware.tcompro.shared.domain.model.valueobjects.Money;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ProductInformation;
 import com.soulware.tcompro.sharedkernel.customer.domain.model.valueobjects.CustomerId;
@@ -27,7 +28,9 @@ public class FavoriteProduct extends CatalogProductReference{
 
     protected FavoriteProduct() {}
 
-    public FavoriteProduct(ProductInformation information, Money price, CustomerId customerId) {
+    public FavoriteProduct(FavoriteProductId id, CatalogProductId catalogProductId, ProductInformation information, Money price, CustomerId customerId) {
+        this.id = id;
+        this.catalogProductId = catalogProductId;
         this.information = information;
         this.price = price;
         this.customerId = customerId;

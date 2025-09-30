@@ -4,7 +4,7 @@ import com.soulware.tcompro.order.domain.model.valueobjects.OrderlineId;
 import com.soulware.tcompro.shared.domain.model.valueobjects.CatalogProductId;
 import com.soulware.tcompro.shared.domain.model.valueobjects.Money;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ProductInformation;
-import com.soulware.tcompro.shopping.domain.model.valueobjects.Quantity;
+import com.soulware.tcompro.shared.domain.model.valueobjects.Quantity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

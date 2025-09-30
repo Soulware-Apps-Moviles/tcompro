@@ -1,4 +1,4 @@
-package com.soulware.tcompro.shopping.domain.model.valueobjects;
+package com.soulware.tcompro.shared.domain.model.valueobjects;
 
 import jakarta.persistence.Embeddable;
 import lombok.NonNull;
