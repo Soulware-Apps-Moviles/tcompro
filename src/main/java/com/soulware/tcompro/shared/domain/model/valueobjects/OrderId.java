@@ -6,5 +6,5 @@ import jakarta.persistence.Embeddable;
 public class OrderId extends BaseId{
     public OrderId(){
     }
-    public OrderId(String orderId){}
+    public OrderId(Long orderId){super(orderId);}
 }

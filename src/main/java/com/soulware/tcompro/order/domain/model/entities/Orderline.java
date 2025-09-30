@@ -38,7 +38,8 @@ public class Orderline {
 
     protected Orderline() {}
 
-    public Orderline(ProductInformation information, Money price, Quantity quantity, CatalogProductId catalogProductId) {
+    public Orderline(OrderlineId id, ProductInformation information, Money price, Quantity quantity, CatalogProductId catalogProductId) {
+        this.id = id;
         this.information = information;
         this.price = price;
         this.quantity = quantity;

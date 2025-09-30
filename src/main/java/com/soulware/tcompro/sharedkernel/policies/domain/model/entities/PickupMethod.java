@@ -23,4 +23,5 @@ public class PickupMethod {
     public String getStringName(){
         return type.toString();
     }
+
 }
