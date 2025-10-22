@@ -10,6 +10,7 @@ import com.soulware.tcompro.inventory.domain.services.ProductCommandService;
 import com.soulware.tcompro.inventory.infrastructure.persistence.jpa.repositories.ProductRepository;
 import com.soulware.tcompro.shared.domain.model.valueobjects.CatalogProductId;
 import com.soulware.tcompro.shared.domain.model.valueobjects.Money;
+import com.soulware.tcompro.shared.domain.model.valueobjects.ProductInformation;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ShopId;
 import com.soulware.tcompro.shared.infrastructure.support.IdGenerator;
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
@@ -58,7 +59,8 @@ public class ProductCommandServiceImpl implements ProductCommandService {
                 new ProductId(idGenerator.nextProductId()),
                 shop.getId(),
                 productCatalog.getId(),
-                new Money(price)
+                new Money(price),
+                productCatalog.getProductInformation()
         );
         productRepository.save(product);
         return Optional.of(product);

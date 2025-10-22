@@ -10,6 +10,8 @@ public class ProductResourceFromEntityAssembler {
                 entity.getShopId().getValue(),
                 entity.getCatalogProductId().getValue(),
                 entity.getPrice().amount(),
+                entity.getInformation().name(),
+                entity.getInformation().description(),
                 entity.isAvailable()
         );
     }

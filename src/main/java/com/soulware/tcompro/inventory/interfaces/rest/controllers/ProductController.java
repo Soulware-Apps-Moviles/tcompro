@@ -64,13 +64,13 @@ public class ProductController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @GetMapping("/by-shop/{id}")
+    @GetMapping("/by-shop/{shopId}")
     @Operation(summary = "Get products from a shop with query params", description = "Get products based on shop, availability and/or category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Products found")
     })
-    public ResponseEntity<List<ProductResource>> getProductsBy(@PathVariable Long id, @RequestParam(required = false) Boolean isAvailable, @RequestParam(required = false) String category) {
-        var query = new GetProductsByShopIdQuery(id, isAvailable, category);
+    public ResponseEntity<List<ProductResource>> getProductsBy(@PathVariable Long shopId, @RequestParam(required = false) Boolean isAvailable, @RequestParam(required = false) String category) {
+        var query = new GetProductsByShopIdQuery(shopId, isAvailable, category);
         List<Product> products = productQueryService
                 .handle(query);
         List<ProductResource> resources = products.stream()

@@ -7,6 +7,8 @@ public record ProductResource(
         Long shopId,
         Long catalogProductId,
         BigDecimal price,
+        String name,
+        String description,
         Boolean isAvailable
 ) {
 }
