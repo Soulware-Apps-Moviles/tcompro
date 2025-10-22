@@ -1,5 +1,6 @@
 package com.soulware.tcompro.shop.application.commandservices;
 
+import com.soulware.tcompro.shared.domain.model.valueobjects.EmailAddress;
 import com.soulware.tcompro.shared.domain.model.valueobjects.Money;
 import com.soulware.tcompro.shared.domain.model.valueobjects.ShopId;
 import com.soulware.tcompro.shared.infrastructure.support.IdGenerator;
@@ -9,6 +10,7 @@ import com.soulware.tcompro.sharedkernel.customer.infrastructure.persistence.jpa
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
 import com.soulware.tcompro.shop.domain.model.aggregates.TrustedCustomer;
 import com.soulware.tcompro.shop.domain.model.commands.AddTrustedCustomerCommand;
+import com.soulware.tcompro.shop.domain.model.commands.UpdateCreditLimitCommand;
 import com.soulware.tcompro.shop.domain.model.valueobjects.TrustedCustomerId;
 import com.soulware.tcompro.shop.domain.services.TrustedCustomerCommandService;
 import com.soulware.tcompro.shop.infrastructure.persistence.jpa.repositories.ShopRepository;
@@ -40,8 +42,8 @@ public class TrustedCustomerCommandServiceImpl implements TrustedCustomerCommand
 
     @Override
     public Optional<TrustedCustomer> handle(AddTrustedCustomerCommand command){
-        Customer customer = customerRepository.findById(new CustomerId(command.customerId()))
-                .orElseThrow(() -> new RuntimeException("Customer with id " + command.customerId() + " not found"));
+        Customer customer = customerRepository.findByEmail(new EmailAddress(command.customerEmail()))
+                .orElseThrow(() -> new RuntimeException("Customer with email " + command.customerEmail() + " not found"));
 
         Shop shop = shopRepository.findById(new ShopId(command.shopId()))
                 .orElseThrow(() -> new RuntimeException("Shop with id " + command.shopId() + " not found"));
@@ -56,6 +58,19 @@ public class TrustedCustomerCommandServiceImpl implements TrustedCustomerCommand
                 customer.getId(),
                 shop.getId()
         );
+        trustedCustomerRepository.save(trustedCustomer);
+        return Optional.of(trustedCustomer);
+    }
+
+    @Override
+    public Optional<TrustedCustomer> handle(UpdateCreditLimitCommand command){
+        TrustedCustomer trustedCustomer = trustedCustomerRepository.findById(new TrustedCustomerId(command.trustedCustomerId()))
+                .orElseThrow(()  -> new RuntimeException("TrustedCustomer with id " + command.trustedCustomerId() + " not found"));
+        trustedCustomer.changeCreditLimit(new  Money(command.creditLimit()));
+
+        if(command.creditLimit() == null)
+            throw new IllegalArgumentException("Credit limit cannot be negative");
+
         trustedCustomerRepository.save(trustedCustomer);
         return Optional.of(trustedCustomer);
     }

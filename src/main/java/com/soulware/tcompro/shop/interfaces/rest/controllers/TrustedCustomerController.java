@@ -7,8 +7,10 @@ import com.soulware.tcompro.shop.domain.services.TrustedCustomerCommandService;
 import com.soulware.tcompro.shop.domain.services.TrustedCustomerQueryService;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.CreateTrustedCustomerCommandFromResourceAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.TrustedCustomerResourceFromEntityAssembler;
+import com.soulware.tcompro.shop.interfaces.rest.assemblers.UpdateCreditLimitCommandFromResourceAssembler;
 import com.soulware.tcompro.shop.interfaces.rest.resources.CreateTrustedCustomerResource;
 import com.soulware.tcompro.shop.interfaces.rest.resources.TrustedCustomerResource;
+import com.soulware.tcompro.shop.interfaces.rest.resources.UpdateCreditLimitResource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -46,6 +48,19 @@ public class TrustedCustomerController {
     public ResponseEntity<TrustedCustomerResource> createTrustedCustomer(CreateTrustedCustomerResource resource){
         Optional<TrustedCustomer> trustedCustomer = trustedCustomerCommandService
                 .handle(CreateTrustedCustomerCommandFromResourceAssembler.toCommandFromResource(resource));
+        return trustedCustomer
+                .map(source -> new ResponseEntity<>(TrustedCustomerResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.CREATED))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    @PatchMapping
+    @Operation(summary = "Update credit limit of a trusted customer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Update credit limit successfully")
+    })
+    public ResponseEntity<TrustedCustomerResource> updateCreditLimit(UpdateCreditLimitResource resource){
+        Optional<TrustedCustomer> trustedCustomer = trustedCustomerCommandService
+                .handle(UpdateCreditLimitCommandFromResourceAssembler.toCommandFromResource(resource));
         return trustedCustomer
                 .map(source -> new ResponseEntity<>(TrustedCustomerResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.CREATED))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));

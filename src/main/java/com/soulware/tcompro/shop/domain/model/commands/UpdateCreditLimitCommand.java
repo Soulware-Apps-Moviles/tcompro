@@ -4,5 +4,5 @@ import jakarta.validation.constraints.Null;
 
 import java.math.BigDecimal;
 
-public record AddTrustedCustomerCommand(String customerEmail, Long shopId, @Null BigDecimal creditLimit) {
+public record UpdateCreditLimitCommand(Long trustedCustomerId, BigDecimal creditLimit) {
 }

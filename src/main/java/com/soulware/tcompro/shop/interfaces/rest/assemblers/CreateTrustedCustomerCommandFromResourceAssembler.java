@@ -6,7 +6,7 @@ import com.soulware.tcompro.shop.interfaces.rest.resources.CreateTrustedCustomer
 public class CreateTrustedCustomerCommandFromResourceAssembler {
     public static AddTrustedCustomerCommand toCommandFromResource(CreateTrustedCustomerResource resource){
         return new  AddTrustedCustomerCommand(
-                resource.customerId(),
+                resource.customerEmail(),
                 resource.shopId(),
                 resource.creditLimit()
         );

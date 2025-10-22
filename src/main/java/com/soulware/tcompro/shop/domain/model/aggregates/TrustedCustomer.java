@@ -45,6 +45,10 @@ public class TrustedCustomer {
         this.isTrusted = true;
     }
 
+    public void changeCreditLimit(Money creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
     public void removeTrust(){
         this.isTrusted = false;
     }
