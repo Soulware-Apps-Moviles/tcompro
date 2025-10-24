@@ -2,6 +2,7 @@ package com.soulware.tcompro.order.application.internal.commandservices;
 
 import com.soulware.tcompro.catalog.domain.model.aggregates.ProductCatalog;
 import com.soulware.tcompro.catalog.infrastructure.persistence.jpa.repositories.ProductCatalogRepository;
+import com.soulware.tcompro.order.interfaces.websocket.websocket.resources.OrderStatusNotificationResource;
 import com.soulware.tcompro.order.domain.model.aggregates.Order;
 import com.soulware.tcompro.order.domain.model.commands.*;
 import com.soulware.tcompro.order.domain.model.entities.OrderStatus;
@@ -26,8 +27,8 @@ import com.soulware.tcompro.sharedkernel.policies.domain.model.valueobjects.Pick
 import com.soulware.tcompro.sharedkernel.policies.infrastructure.persistence.jpa.repositories.PaymentMethodRepository;
 import com.soulware.tcompro.sharedkernel.policies.infrastructure.persistence.jpa.repositories.PickupMethodRepository;
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
-import com.soulware.tcompro.shop.domain.model.valueobjects.OwnerId;
 import com.soulware.tcompro.shop.infrastructure.persistence.jpa.repositories.ShopRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     private final PickupMethodRepository pickupMethodRepository;
     private final ProductCatalogRepository productCatalogRepository;
     private final IdGenerator idGenerator;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public OrderCommandServiceImpl(
             OrderRepository orderRepository,
@@ -52,7 +54,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             PaymentMethodRepository paymentMethodRepository,
             PickupMethodRepository pickupMethodRepository,
             ProductCatalogRepository productCatalogRepository,
-            IdGenerator idGenerator
+            IdGenerator idGenerator,
+            SimpMessagingTemplate messagingTemplate
     ){
         this.orderRepository = orderRepository;
         this.orderStatusRepository = orderStatusRepository;
@@ -62,6 +65,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         this.pickupMethodRepository = pickupMethodRepository;
         this.productCatalogRepository = productCatalogRepository;
         this.idGenerator = idGenerator;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Override
@@ -133,6 +137,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
         order.changeStatus(accepted);
         orderRepository.save(order);
+
+        notifyOrderStatusChange(order);
+
         return Optional.of(order);
     }
 
@@ -146,6 +153,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
         order.changeStatus(rejected);
         orderRepository.save(order);
+
+        notifyOrderStatusChange(order);
+
         return Optional.of(order);
     }
 
@@ -159,6 +169,9 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
         order.changeStatus(canceled);
         orderRepository.save(order);
+
+        notifyOrderStatusChange(order);
+
         return Optional.of(order);
     }
 
@@ -174,6 +187,28 @@ public class OrderCommandServiceImpl implements OrderCommandService {
 
         order.changeStatus(nextStatus);
         orderRepository.save(order);
+
+        notifyOrderStatusChange(order);
+
         return Optional.of(order);
+    }
+
+    private void notifyOrderStatusChange(Order order) {
+        Long orderId = order.getOrderId().getValue();
+        String newStatus = order.getStatus().getName().name();
+        Long shopId = order.getShopId().getValue();
+
+        OrderStatusNotificationResource notification =
+                new OrderStatusNotificationResource(orderId, newStatus, shopId);
+
+        // Example: /topic/orders/123/status
+        String topicOrden = "/topic/orders/" + orderId + "/status";
+        messagingTemplate.convertAndSend(topicOrden, notification);
+
+        // Example: /topic/shop/456/orders
+        String topicTienda = "/topic/shop/" + shopId + "/orders";
+        messagingTemplate.convertAndSend(topicTienda, notification);
+
+        System.out.println(">>> Changing status of order with id  " + orderId + " to " + newStatus);
     }
 }
