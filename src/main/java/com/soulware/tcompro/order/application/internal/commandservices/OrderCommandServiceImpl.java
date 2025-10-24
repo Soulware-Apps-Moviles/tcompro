@@ -2,6 +2,12 @@ package com.soulware.tcompro.order.application.internal.commandservices;
 
 import com.soulware.tcompro.catalog.domain.model.aggregates.ProductCatalog;
 import com.soulware.tcompro.catalog.infrastructure.persistence.jpa.repositories.ProductCatalogRepository;
+import com.soulware.tcompro.checkout.domain.model.aggregates.Debt;
+import com.soulware.tcompro.checkout.domain.model.aggregates.Payment;
+import com.soulware.tcompro.checkout.domain.model.commands.RegisterDebtCommand;
+import com.soulware.tcompro.checkout.domain.model.commands.RegisterPaymentCommand;
+import com.soulware.tcompro.checkout.domain.services.DebtCommandService;
+import com.soulware.tcompro.checkout.domain.services.PaymentCommandService;
 import com.soulware.tcompro.order.interfaces.websocket.websocket.resources.OrderStatusNotificationResource;
 import com.soulware.tcompro.order.domain.model.aggregates.Order;
 import com.soulware.tcompro.order.domain.model.commands.*;
@@ -28,6 +34,7 @@ import com.soulware.tcompro.sharedkernel.policies.infrastructure.persistence.jpa
 import com.soulware.tcompro.sharedkernel.policies.infrastructure.persistence.jpa.repositories.PickupMethodRepository;
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
 import com.soulware.tcompro.shop.infrastructure.persistence.jpa.repositories.ShopRepository;
+import jakarta.validation.constraints.Null;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +50,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final PickupMethodRepository pickupMethodRepository;
     private final ProductCatalogRepository productCatalogRepository;
+    private final PaymentCommandService paymentCommandService;
+    private final DebtCommandService debtCommandService;
     private final IdGenerator idGenerator;
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -54,6 +63,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             PaymentMethodRepository paymentMethodRepository,
             PickupMethodRepository pickupMethodRepository,
             ProductCatalogRepository productCatalogRepository,
+            PaymentCommandService paymentCommandService,
+            DebtCommandService debtCommandService,
             IdGenerator idGenerator,
             SimpMessagingTemplate messagingTemplate
     ){
@@ -64,6 +75,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         this.paymentMethodRepository = paymentMethodRepository;
         this.pickupMethodRepository = pickupMethodRepository;
         this.productCatalogRepository = productCatalogRepository;
+        this.paymentCommandService = paymentCommandService;
+        this.debtCommandService = debtCommandService;
         this.idGenerator = idGenerator;
         this.messagingTemplate = messagingTemplate;
     }
@@ -189,6 +202,17 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         orderRepository.save(order);
 
         notifyOrderStatusChange(order);
+
+        if (order.getStatus().getName().equals(OrderStatuses.DELIVERED) || order.getStatus().getName().equals(OrderStatuses.PICKED_UP)) {
+            if(order.getPaymentMethod().getName().equals(PaymentMethods.CASH) || order.getPaymentMethod().getName().equals(PaymentMethods.VIRTUAL)) {
+                RegisterPaymentCommand  registerPaymentCommand = new RegisterPaymentCommand(order.getOrderId().getValue(), null);
+                Optional<Payment> payment = paymentCommandService
+                        .handle(registerPaymentCommand);
+            }
+            RegisterDebtCommand registerDebtCommand = new RegisterDebtCommand(order.getOrderId().getValue());
+            Optional<Debt> debt = debtCommandService
+                    .handle(registerDebtCommand);
+        }
 
         return Optional.of(order);
     }
