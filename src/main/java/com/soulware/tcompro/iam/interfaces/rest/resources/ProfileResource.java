@@ -11,7 +11,6 @@ public record ProfileResource(
         String lastName,
         String email,
         @Nullable String phone,
-        @Nullable Long shopId,
         String role
 ) {
 }

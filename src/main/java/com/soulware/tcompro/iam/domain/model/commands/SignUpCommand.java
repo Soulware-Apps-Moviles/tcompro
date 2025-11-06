@@ -12,6 +12,5 @@ public record SignUpCommand(AuthId authId,
                             PersonName personName,
                             EmailAddress email,
                             @Nullable PhoneNumber phoneNumber,
-                            @Nullable ShopId shopId,
                             Role role) {
 }

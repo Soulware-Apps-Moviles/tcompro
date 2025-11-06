@@ -17,7 +17,6 @@ public class ProfileResourceFromEntityAssembler {
                     customer.getName().lastName(),
                     customer.getEmail().email(),
                     customer.getPhone().value(),
-                    10000L,
                     "CUSTOMER"
             );
         }
@@ -30,7 +29,6 @@ public class ProfileResourceFromEntityAssembler {
                     owner.getName().lastName(),
                     owner.getEmail().email(),
                     owner.getPhone().value(),
-                    10000L,
                     "SHOP_OWNER"
             );
         }
@@ -43,7 +41,6 @@ public class ProfileResourceFromEntityAssembler {
                     shopkeeper.getName().lastName(),
                     shopkeeper.getEmail().email(),
                     shopkeeper.getPhone().value(),
-                    shopkeeper.getShopId().getValue(),
                     "SHOPKEEPER"
             );
         }

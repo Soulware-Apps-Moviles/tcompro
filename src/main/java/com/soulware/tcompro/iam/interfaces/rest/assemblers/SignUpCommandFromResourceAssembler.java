@@ -18,7 +18,6 @@ public class SignUpCommandFromResourceAssembler {
                 new PersonName(resource.firstName(), resource.lastName()),
                 new EmailAddress(resource.email()),
                 new PhoneNumber(resource.phone()),
-                new ShopId(resource.shopId() != null ? resource.shopId() : 10000L),
                 new Role(Roles.valueOf(resource.role()))
         );
     }

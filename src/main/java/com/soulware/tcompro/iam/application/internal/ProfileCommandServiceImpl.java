@@ -7,6 +7,7 @@ import com.soulware.tcompro.iam.domain.model.valueobjects.Roles;
 import com.soulware.tcompro.iam.domain.services.ProfileCommandService;
 import com.soulware.tcompro.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.soulware.tcompro.shared.domain.model.valueobjects.EmailAddress;
+import com.soulware.tcompro.shared.domain.model.valueobjects.ShopId;
 import com.soulware.tcompro.shared.infrastructure.support.IdGenerator;
 import com.soulware.tcompro.sharedkernel.customer.domain.model.aggregates.Customer;
 import com.soulware.tcompro.sharedkernel.customer.domain.model.valueobjects.CustomerId;
@@ -71,7 +72,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
                         command.personName(),
                         command.email(),
                         command.phoneNumber(),
-                        command.shopId()
+                        new ShopId(99999L)
                 );
                 shopkeeperRepository.save(shopkeeper);
                 yield Optional.of(shopkeeper);
