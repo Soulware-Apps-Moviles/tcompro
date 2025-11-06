@@ -4,6 +4,7 @@ import com.soulware.tcompro.catalog.domain.model.aggregates.ProductCatalog;
 import com.soulware.tcompro.catalog.domain.model.queries.GetAllCatalogProductsByCategoryNameQuery;
 import com.soulware.tcompro.catalog.domain.model.queries.GetAllCatalogProductsQuery;
 import com.soulware.tcompro.catalog.domain.model.queries.GetCatalogProductByIdQuery;
+import com.soulware.tcompro.catalog.domain.model.queries.GetProductCatalogByNameQuery;
 import com.soulware.tcompro.catalog.domain.services.ProductCatalogQueryService;
 import com.soulware.tcompro.catalog.infrastructure.persistence.jpa.repositories.ProductCatalogRepository;
 import com.soulware.tcompro.shared.domain.model.entities.Category;
@@ -46,5 +47,10 @@ public class ProductCatalogQueryServiceImpl implements ProductCatalogQueryServic
                         "Category with name " + query.category() + " does not exist"
                 ));
         return productCatalogRepository.findAllByCategory(category);
+    }
+
+    @Override
+    public List<ProductCatalog> handle(GetProductCatalogByNameQuery query) {
+        return productCatalogRepository.findAllByNameLike(query.name());
     }
 }

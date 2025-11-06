@@ -21,4 +21,10 @@ public interface ProductCatalogRepository extends JpaRepository<ProductCatalog, 
 
     @Query("SELECT pc FROM ProductCatalog pc WHERE pc.id.value IN :ids")
     List<ProductCatalog> findAllByIds(@Param("ids") List<Long> ids);
+
+    @Query(
+            value = "SELECT * FROM catalog_products cp WHERE cp.name ILIKE CONCAT('%', :name, '%')",
+            nativeQuery = true
+    )
+    List<ProductCatalog> findAllByNameLike(@Param("name") String name);
 }

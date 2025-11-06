@@ -4,6 +4,7 @@ import com.soulware.tcompro.catalog.domain.model.aggregates.ProductCatalog;
 import com.soulware.tcompro.catalog.domain.model.queries.GetAllCatalogProductsByCategoryNameQuery;
 import com.soulware.tcompro.catalog.domain.model.queries.GetAllCatalogProductsQuery;
 import com.soulware.tcompro.catalog.domain.model.queries.GetCatalogProductByIdQuery;
+import com.soulware.tcompro.catalog.domain.model.queries.GetProductCatalogByNameQuery;
 import com.soulware.tcompro.catalog.domain.services.ProductCatalogQueryService;
 import com.soulware.tcompro.catalog.interfaces.rest.assemblers.ProductCatalogResourceFromEntityAssembler;
 import com.soulware.tcompro.catalog.interfaces.rest.resources.ProductCatalogResource;
@@ -66,6 +67,21 @@ public class ProductCatalogController {
     })
     public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProductsByCategory(@RequestParam String category){
         var query = new GetAllCatalogProductsByCategoryNameQuery(category);
+        List<ProductCatalog> productCatalogs = productCatalogQueryService
+                .handle(query);
+        List<ProductCatalogResource> resources = productCatalogs.stream()
+                .map(ProductCatalogResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping("/by-name")
+    @Operation(summary = "Get all catalog products by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Catalog products found")
+    })
+    public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProductsByName(@RequestParam String name){
+        var query = new GetProductCatalogByNameQuery(name);
         List<ProductCatalog> productCatalogs = productCatalogQueryService
                 .handle(query);
         List<ProductCatalogResource> resources = productCatalogs.stream()
