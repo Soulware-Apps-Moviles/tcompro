@@ -1,10 +1,7 @@
 package com.soulware.tcompro.catalog.interfaces.rest.controllers;
 
 import com.soulware.tcompro.catalog.domain.model.aggregates.ProductCatalog;
-import com.soulware.tcompro.catalog.domain.model.queries.GetAllCatalogProductsByCategoryNameQuery;
-import com.soulware.tcompro.catalog.domain.model.queries.GetAllCatalogProductsQuery;
-import com.soulware.tcompro.catalog.domain.model.queries.GetCatalogProductByIdQuery;
-import com.soulware.tcompro.catalog.domain.model.queries.GetProductCatalogByNameQuery;
+import com.soulware.tcompro.catalog.domain.model.queries.GetAllProductCatalogQuery;
 import com.soulware.tcompro.catalog.domain.services.ProductCatalogQueryService;
 import com.soulware.tcompro.catalog.interfaces.rest.assemblers.ProductCatalogResourceFromEntityAssembler;
 import com.soulware.tcompro.catalog.interfaces.rest.resources.ProductCatalogResource;
@@ -30,58 +27,16 @@ public class ProductCatalogController {
         this.productCatalogQueryService = productCatalogQueryService;
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get Catalog Product by his id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Catalog product found")
-    })
-    public ResponseEntity<ProductCatalogResource> getCatalogProductsById(@PathVariable Long id) {
-        var query = new GetCatalogProductByIdQuery(id);
-        Optional<ProductCatalog> productCatalog = productCatalogQueryService
-                .handle(query);
-        return productCatalog
-                .map(source -> new ResponseEntity<>(ProductCatalogResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping
-    @Operation(summary = "Get all catalog products")
+    @GetMapping()
+    @Operation(summary = "Get all catalog products by filters")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Catalog products found")
     })
-    public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProducts(){
-        var query = new GetAllCatalogProductsQuery();
-        List<ProductCatalog> productCatalogs = productCatalogQueryService
-                .handle(query);
-        List<ProductCatalogResource> resources = productCatalogs.stream()
-                .map(ProductCatalogResourceFromEntityAssembler::toResourceFromEntity)
-                .toList();
-        return ResponseEntity.ok(resources);
-    }
-
-
-    @GetMapping("/by-category")
-    @Operation(summary = "Get all catalog products by category")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Catalog products found")
-    })
-    public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProductsByCategory(@RequestParam String category){
-        var query = new GetAllCatalogProductsByCategoryNameQuery(category);
-        List<ProductCatalog> productCatalogs = productCatalogQueryService
-                .handle(query);
-        List<ProductCatalogResource> resources = productCatalogs.stream()
-                .map(ProductCatalogResourceFromEntityAssembler::toResourceFromEntity)
-                .toList();
-        return ResponseEntity.ok(resources);
-    }
-
-    @GetMapping("/by-name")
-    @Operation(summary = "Get all catalog products by name")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Catalog products found")
-    })
-    public ResponseEntity<List<ProductCatalogResource>> getAllCatalogProductsByName(@RequestParam String name){
-        var query = new GetProductCatalogByNameQuery(name);
+    public ResponseEntity<List<ProductCatalogResource>> getAllProductCatalog(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String name) {
+        var query = new GetAllProductCatalogQuery(category, id,  name);
         List<ProductCatalog> productCatalogs = productCatalogQueryService
                 .handle(query);
         List<ProductCatalogResource> resources = productCatalogs.stream()

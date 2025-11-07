@@ -14,17 +14,27 @@ import java.util.Optional;
 
 @Repository
 public interface ProductCatalogRepository extends JpaRepository<ProductCatalog, Long> {
-
     Optional<ProductCatalog> findById(CatalogProductId id);
-
-    List<ProductCatalog> findAllByCategory(Category category);
 
     @Query("SELECT pc FROM ProductCatalog pc WHERE pc.id.value IN :ids")
     List<ProductCatalog> findAllByIds(@Param("ids") List<Long> ids);
 
     @Query(
-            value = "SELECT * FROM catalog_products cp WHERE cp.name ILIKE CONCAT('%', :name, '%')",
+            value = """
+        SELECT cp.* FROM catalog_products cp
+        JOIN category c ON c.id = cp.category_id
+        WHERE (:id IS NULL OR cp.id = :id)
+          AND (:category IS NULL OR LOWER(c.name) = LOWER(:category))
+          AND (:name IS NULL OR LOWER(cp.name) LIKE LOWER(CONCAT('%', :name, '%')))
+    """,
             nativeQuery = true
     )
-    List<ProductCatalog> findAllByNameLike(@Param("name") String name);
+    List<ProductCatalog> findAllByFilters(
+            @Param("id") Long id,
+            @Param("category") String category,
+            @Param("name") String name
+    );
+
+
+
 }
