@@ -60,7 +60,8 @@ public class ProductCommandServiceImpl implements ProductCommandService {
                 shop.getId(),
                 productCatalog.getId(),
                 new Money(price),
-                productCatalog.getProductInformation()
+                productCatalog.getProductInformation(),
+                productCatalog.getImageUrl()
         );
         productRepository.save(product);
         return Optional.of(product);

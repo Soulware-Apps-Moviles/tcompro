@@ -9,6 +9,7 @@ public record ProductResource(
         BigDecimal price,
         String name,
         String description,
-        Boolean isAvailable
+        Boolean isAvailable,
+        String imageUrl
 ) {
 }

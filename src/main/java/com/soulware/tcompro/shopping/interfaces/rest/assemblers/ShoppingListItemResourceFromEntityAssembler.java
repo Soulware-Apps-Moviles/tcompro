@@ -11,7 +11,8 @@ public class ShoppingListItemResourceFromEntityAssembler {
                 entity.information.name(),
                 entity.information.description(),
                 entity.price.amount(),
-                entity.getQuantity().value()
+                entity.getQuantity().value(),
+                entity.imageUrl
         );
     }
 }

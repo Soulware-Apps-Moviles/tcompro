@@ -121,7 +121,8 @@ public class OrderCommandServiceImpl implements OrderCommandService {
                             pc.getProductInformation(),
                             pc.getPrice(),
                             new Quantity(qty),
-                            pc.getId()
+                            pc.getId(),
+                            pc.getImageUrl()
                     );
                 })
                 .toList();

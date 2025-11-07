@@ -22,4 +22,6 @@ public abstract class CatalogProductReference {
 
     @Embedded
     public Money price;
+
+    public String imageUrl;
 }

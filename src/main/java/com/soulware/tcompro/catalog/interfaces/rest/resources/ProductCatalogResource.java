@@ -7,6 +7,7 @@ public record ProductCatalogResource(
         String name,
         String description,
         String category,
-        BigDecimal price
+        BigDecimal price,
+        String imageUrl
 ) {
 }

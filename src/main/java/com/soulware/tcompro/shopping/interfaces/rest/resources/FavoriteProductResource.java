@@ -8,6 +8,7 @@ public record FavoriteProductResource(
         String name,
         String description,
         BigDecimal price,
-        Long customerId
+        Long customerId,
+        String imageUrl
 ) {
 }

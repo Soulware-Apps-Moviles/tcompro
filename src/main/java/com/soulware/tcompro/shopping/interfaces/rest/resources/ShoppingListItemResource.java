@@ -8,6 +8,7 @@ public record ShoppingListItemResource(
         String name,
         String description,
         BigDecimal price,
-        Integer quantity
+        Integer quantity,
+        String imageUrl
 ) {
 }

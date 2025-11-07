@@ -28,11 +28,12 @@ public class FavoriteProduct extends CatalogProductReference{
 
     protected FavoriteProduct() {}
 
-    public FavoriteProduct(FavoriteProductId id, CatalogProductId catalogProductId, ProductInformation information, Money price, CustomerId customerId) {
+    public FavoriteProduct(FavoriteProductId id, CatalogProductId catalogProductId, ProductInformation information, Money price, CustomerId customerId, String imageUrl) {
         this.id = id;
         this.catalogProductId = catalogProductId;
         this.information = information;
         this.price = price;
         this.customerId = customerId;
+        this.imageUrl = imageUrl;
     }
 }

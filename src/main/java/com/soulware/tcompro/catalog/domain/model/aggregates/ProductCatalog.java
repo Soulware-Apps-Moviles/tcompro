@@ -29,4 +29,6 @@ public class ProductCatalog {
 
     @Embedded
     private Money price;
+
+    private String imageUrl;
 }

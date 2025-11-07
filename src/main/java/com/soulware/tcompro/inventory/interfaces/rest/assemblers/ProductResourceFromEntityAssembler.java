@@ -12,7 +12,8 @@ public class ProductResourceFromEntityAssembler {
                 entity.getPrice().amount(),
                 entity.getInformation().name(),
                 entity.getInformation().description(),
-                entity.isAvailable()
+                entity.isAvailable(),
+                entity.getImageUrl()
         );
     }
 }

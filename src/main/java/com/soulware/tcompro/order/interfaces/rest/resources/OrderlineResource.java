@@ -8,6 +8,7 @@ public record OrderlineResource(
         String description,
         BigDecimal price,
         Integer quantity,
-        Long catalogProductId
+        Long catalogProductId,
+        String imageUrl
 ) {
 }

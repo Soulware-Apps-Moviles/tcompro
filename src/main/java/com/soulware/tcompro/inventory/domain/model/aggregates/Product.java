@@ -40,6 +40,8 @@ public class Product {
 
     private boolean isAvailable;
 
+    private String imageUrl;
+
     protected Product() {}
 
     public Product(
@@ -47,7 +49,8 @@ public class Product {
             ShopId shopId,
             CatalogProductId catalogProductId,
             Money price,
-            ProductInformation productInformation
+            ProductInformation productInformation,
+            String imageUrl
     ){
         this.id = productId;
         this.shopId = shopId;
@@ -55,7 +58,7 @@ public class Product {
         this.price = price;
         this.information = productInformation;
         this.isAvailable = true;
-
+        this.imageUrl = imageUrl;
     }
 
     public void changePrice(Money price){

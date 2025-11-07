@@ -26,11 +26,12 @@ public class ShoppingListItem extends CatalogProductReference {
 
     protected ShoppingListItem() {}
 
-    public ShoppingListItem(ShoppingListItemId id, CatalogProductId catalogProductId, ProductInformation information, Money price, Quantity quantity) {
+    public ShoppingListItem(ShoppingListItemId id, CatalogProductId catalogProductId, ProductInformation information, Money price, Quantity quantity, String imageUrl) {
         this.id = id;
         this.catalogProductId = catalogProductId;
         this.information = information;
         this.price = price;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 }

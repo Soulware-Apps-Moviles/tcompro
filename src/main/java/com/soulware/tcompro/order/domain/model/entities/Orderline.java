@@ -36,14 +36,17 @@ public class Orderline {
     )
     private CatalogProductId  catalogProductId;
 
+    private String imageUrl;
+
     protected Orderline() {}
 
-    public Orderline(OrderlineId id, ProductInformation information, Money price, Quantity quantity, CatalogProductId catalogProductId) {
+    public Orderline(OrderlineId id, ProductInformation information, Money price, Quantity quantity, CatalogProductId catalogProductId,  String imageUrl) {
         this.id = id;
         this.information = information;
         this.price = price;
         this.quantity = quantity;
         this.catalogProductId = catalogProductId;
+        this.imageUrl = imageUrl;
     }
 
     public Money getSubtotal(){

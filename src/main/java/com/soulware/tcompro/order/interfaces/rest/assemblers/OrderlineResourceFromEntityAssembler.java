@@ -11,7 +11,8 @@ public class OrderlineResourceFromEntityAssembler {
                 entity.getInformation().description(),
                 entity.getPrice().amount(),
                 entity.getQuantity().value(),
-                entity.getCatalogProductId().getValue()
+                entity.getCatalogProductId().getValue(),
+                entity.getImageUrl()
         );
     }
 }

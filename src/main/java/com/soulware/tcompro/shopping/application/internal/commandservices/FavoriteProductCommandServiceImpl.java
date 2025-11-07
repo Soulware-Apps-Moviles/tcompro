@@ -55,7 +55,8 @@ public class FavoriteProductCommandServiceImpl implements FavoriteProductCommand
                 productCatalog.getId(),
                 productCatalog.getProductInformation(),
                 productCatalog.getPrice(),
-                customer.getId()
+                customer.getId(),
+                productCatalog.getImageUrl()
         );
 
         favoriteProductRepository.save(favoriteProduct);

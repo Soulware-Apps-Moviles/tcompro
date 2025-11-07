@@ -11,7 +11,8 @@ public class FavoriteProductResourceFromEntityAssembler {
                 entity.information.name(),
                 entity.information.description(),
                 entity.price.amount(),
-                entity.getCustomerId().getValue()
+                entity.getCustomerId().getValue(),
+                entity.imageUrl
         );
     }
 }

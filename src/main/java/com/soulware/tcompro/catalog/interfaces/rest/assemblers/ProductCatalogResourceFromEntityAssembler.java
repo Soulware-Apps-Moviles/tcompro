@@ -10,7 +10,8 @@ public class ProductCatalogResourceFromEntityAssembler {
                 entity.getProductInformation().name(),
                 entity.getProductInformation().description(),
                 entity.getCategory().getName().name(),
-                entity.getPrice().amount()
+                entity.getPrice().amount(),
+                entity.getImageUrl()
         );
     }
 }

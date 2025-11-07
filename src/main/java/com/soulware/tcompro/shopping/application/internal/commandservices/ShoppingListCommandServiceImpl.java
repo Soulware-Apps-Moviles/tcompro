@@ -76,7 +76,8 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
                             pc.getId(),
                             pc.getProductInformation(),
                             pc.getPrice(),
-                            new Quantity(qty)
+                            new Quantity(qty),
+                            pc.getImageUrl()
                     );
                 })
                 .toList();
@@ -128,7 +129,8 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
                                 productCatalog.getId(),
                                 productCatalog.getProductInformation(),
                                 productCatalog.getPrice(),
-                                new Quantity(command.item().getQuantity())
+                                new Quantity(command.item().getQuantity()),
+                                productCatalog.getImageUrl()
                         )
                 );
                 shoppingListRepository.save(shoppingList);
