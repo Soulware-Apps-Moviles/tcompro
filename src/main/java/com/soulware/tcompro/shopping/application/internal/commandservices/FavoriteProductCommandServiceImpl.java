@@ -65,8 +65,8 @@ public class FavoriteProductCommandServiceImpl implements FavoriteProductCommand
 
     @Override
     public Optional<Long> handle(RemoveFavoriteProductCommand command){
-        FavoriteProduct favoriteProduct = favoriteProductRepository.findById(new FavoriteProductId(command.favoriteProductId()))
-                .orElseThrow(() -> new RuntimeException("Favorite product with id " + command.favoriteProductId() + " not found"));
+        FavoriteProduct favoriteProduct = favoriteProductRepository.findByCustomerIdAndCatalogProductId(new CustomerId(command.customerId()), new CatalogProductId(command.catalogProductId()))
+                        .orElseThrow(() -> new RuntimeException("Favorite product with id " + command.catalogProductId() + " not found"));
         favoriteProductRepository.delete(favoriteProduct);
         return Optional.of(favoriteProduct.getId().getValue());
     }

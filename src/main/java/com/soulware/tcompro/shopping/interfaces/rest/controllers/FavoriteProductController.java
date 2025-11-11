@@ -48,16 +48,16 @@ public class FavoriteProductController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping()
     @Operation(summary = "Delete Favorite product by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Delete Favorite Product successfully"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "404", description = "Favorite product not found")
     })
-    public ResponseEntity<Long> deleteFavoriteProduct(@PathVariable Long id){
+    public ResponseEntity<Long> deleteFavoriteProduct(@RequestBody DeleteFavoriteProductResource resource){
         Optional<Long> favoriteProductId = favoriteProductCommandService
-                .handle(DeleteFavoriteProductCommandFromResourceAssembler.toCommandFromResource(id));
+                .handle(DeleteFavoriteProductCommandFromResourceAssembler.toCommandFromResource(resource.productId(),  resource.customerId()));
         return favoriteProductId
                 .map(source -> new ResponseEntity<>(source, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
