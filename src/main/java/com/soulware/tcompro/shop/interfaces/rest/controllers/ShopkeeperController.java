@@ -8,6 +8,7 @@ import com.soulware.tcompro.shop.domain.model.queries.GetShopkeeperByEmailAddres
 import com.soulware.tcompro.shop.domain.services.ShopkeeperCommandService;
 import com.soulware.tcompro.shop.domain.services.ShopkeeperQueryService;
 import com.soulware.tcompro.shop.interfaces.rest.assemblers.ShopkeeperResourceFromEntityAssembler;
+import com.soulware.tcompro.shop.interfaces.rest.resources.HireShopkeeperResource;
 import com.soulware.tcompro.shop.interfaces.rest.resources.ShopkeeperResource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,16 +35,16 @@ public class ShopkeeperController {
         this.shopkeeperQueryService = shopkeeperQueryService;
     }
 
-    @PatchMapping("/rehire/{id}")
-    @Operation(summary = "Rehire a shopkeeper by his id")
+    @PatchMapping("/hire")
+    @Operation(summary = "Hire a shopkeeper by his email")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Rehire shopkeeper successfully"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "404", description = "Shopkeeper not found")
     })
-    public ResponseEntity<ShopkeeperResource> rehireShopkeeper(@PathVariable Long id) {
+    public ResponseEntity<ShopkeeperResource> rehireShopkeeper(@RequestBody HireShopkeeperResource resource) {
         Optional<Shopkeeper> shopkeeper = shopkeeperCommandService
-                .handle(new HireShopkeeperCommand(id));
+                .handle(new HireShopkeeperCommand(resource.shopId(),  resource.email()));
         return shopkeeper
                 .map(source -> new ResponseEntity<>(ShopkeeperResourceFromEntityAssembler.toResourceFromEntity(source), HttpStatus.OK))
                 .orElseGet(() -> ResponseEntity.notFound().build());

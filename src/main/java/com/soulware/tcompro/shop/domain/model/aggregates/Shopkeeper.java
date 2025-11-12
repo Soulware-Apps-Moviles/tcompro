@@ -39,7 +39,7 @@ public class Shopkeeper extends Profile {
     public Shopkeeper(ShopkeeperId id, AuthId authId, PersonName personName, EmailAddress email, @Nullable PhoneNumber phone, ShopId shopId) {
         super(authId, personName, email, phone);
         this.shopId = shopId;
-        this.isHired = true;
+        this.isHired = false;
         this.id = id;
     }
 

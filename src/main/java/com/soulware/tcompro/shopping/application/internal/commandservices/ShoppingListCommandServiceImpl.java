@@ -20,6 +20,7 @@ import com.soulware.tcompro.shopping.infrastructure.persistence.jpa.repositories
 import com.soulware.tcompro.shared.domain.model.valueobjects.PairResource;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,32 +56,34 @@ public class ShoppingListCommandServiceImpl implements ShoppingListCommandServic
 
         List<ProductCatalog> productCatalogs = productCatalogRepository.findAllByIds(productIds);
 
-        if (productCatalogs.isEmpty()) throw new IllegalArgumentException("No product catalog found");
-
         String name =  command.name();
 
         if (name.isEmpty()) throw new IllegalArgumentException("Shopping list name is empty");
 
-        List<ShoppingListItem> items = command.items().stream()
-                .map(pair -> {
-                    Long catalogId = pair.getProductCatalogId();
-                    Integer qty = pair.getQuantity();
+        List<ShoppingListItem> items = Collections.emptyList();
 
-                    ProductCatalog pc = productCatalogs.stream()
-                            .filter(p -> p.getId().getValue().equals(catalogId))
-                            .findFirst()
-                            .orElseThrow(() -> new IllegalArgumentException("Catalog product " + catalogId + " not found"));
+        if(!command.items().isEmpty()){
+            items = command.items().stream()
+                    .map(pair -> {
+                        Long catalogId = pair.getProductCatalogId();
+                        Integer qty = pair.getQuantity();
 
-                    return new ShoppingListItem(
-                            new ShoppingListItemId(idGenerator.nextShoppingListItemId()),
-                            pc.getId(),
-                            pc.getProductInformation(),
-                            pc.getPrice(),
-                            new Quantity(qty),
-                            pc.getImageUrl()
-                    );
-                })
-                .toList();
+                        ProductCatalog pc = productCatalogs.stream()
+                                .filter(p -> p.getId().getValue().equals(catalogId))
+                                .findFirst()
+                                .orElseThrow(() -> new IllegalArgumentException("Catalog product " + catalogId + " not found"));
+
+                        return new ShoppingListItem(
+                                new ShoppingListItemId(idGenerator.nextShoppingListItemId()),
+                                pc.getId(),
+                                pc.getProductInformation(),
+                                pc.getPrice(),
+                                new Quantity(qty),
+                                pc.getImageUrl()
+                        );
+                    })
+                    .toList();
+        }
 
         ShoppingList shoppingList = new ShoppingList(
                 new ShoppingListId(idGenerator.nextShoppingListId()),

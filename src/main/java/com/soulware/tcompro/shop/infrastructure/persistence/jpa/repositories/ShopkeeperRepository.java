@@ -20,4 +20,6 @@ public interface ShopkeeperRepository extends JpaRepository<Shopkeeper, Long> {
     Optional<Shopkeeper> findById(ShopkeeperId id);
 
     List<Shopkeeper> findAllByShopId(ShopId shopId);
+
+    Optional<Shopkeeper> findByEmailAndShopId(EmailAddress email, ShopId shopId);
 }
