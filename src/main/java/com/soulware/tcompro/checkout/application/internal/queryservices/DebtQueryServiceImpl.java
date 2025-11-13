@@ -18,7 +18,16 @@ public class DebtQueryServiceImpl implements DebtQueryService {
     }
 
     @Override
-    public List<Debt> handle(GetDebtsQuery query){
-        return debtRepository.findDebtsOp(query.customerId(),query.shopId(), DebtStatuses.valueOf(query.status()));
+    public List<Debt> handle(GetDebtsQuery query) {
+        DebtStatuses status = null;
+        if (query.status() != null && !query.status().isBlank()) {
+            try {
+                status = DebtStatuses.valueOf(query.status().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                status = null;
+            }
+        }
+        return debtRepository.findDebtsOp(query.customerId(), query.shopId(), status);
     }
+
 }
