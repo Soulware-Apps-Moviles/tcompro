@@ -1,7 +1,7 @@
 package com.soulware.tcompro.shopping.interfaces.rest.controllers;
 
 import com.soulware.tcompro.shopping.domain.model.aggregates.ShoppingList;
-import com.soulware.tcompro.shopping.domain.model.queries.GetAllShoppingListsByCustomerIdQuery;
+import com.soulware.tcompro.shopping.domain.model.queries.GetAllShoppingListsQuery;
 import com.soulware.tcompro.shopping.domain.services.ShoppingListCommandService;
 import com.soulware.tcompro.shopping.domain.services.ShoppingListQueryService;
 import com.soulware.tcompro.shopping.interfaces.rest.assemblers.CreateShoppingListCommandFromResourceAssembler;
@@ -82,13 +82,16 @@ public class ShoppingListController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
-    @GetMapping("/by-customer/{id}")
-    @Operation(summary = "Get shopping lists by customer")
+    @GetMapping("")
+    @Operation(summary = "Get shopping lists")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Shopping Lists found")
     })
-    public ResponseEntity<List<ShoppingListResource>> getAllShoppingListsByCustomer(@PathVariable Long id){
-        var query = new GetAllShoppingListsByCustomerIdQuery(id);
+    public ResponseEntity<List<ShoppingListResource>> getAllShoppingListsByCustomer(
+            @RequestParam Long customerId,
+            @RequestParam(required = false) String name
+    ){
+        var query = new GetAllShoppingListsQuery(customerId, name);
         List<ShoppingList> shoppingLists = shoppingListQueryService
                 .handle(query);
         List<ShoppingListResource> resources = shoppingLists.stream()
