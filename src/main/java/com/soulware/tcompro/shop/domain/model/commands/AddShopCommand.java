@@ -6,5 +6,8 @@ import java.util.List;
 public record AddShopCommand(Long OwnerId,
                              List<String> paymentMethods,
                              List<String> pickupMethods,
-                             BigDecimal maxCreditPerCustomer) {
+                             BigDecimal maxCreditPerCustomer,
+                             double latitude,
+                             double longitude,
+                             String name) {
 }

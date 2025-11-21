@@ -12,6 +12,7 @@ import com.soulware.tcompro.sharedkernel.policies.infrastructure.persistence.jpa
 import com.soulware.tcompro.shop.domain.model.aggregates.Owner;
 import com.soulware.tcompro.shop.domain.model.aggregates.Shop;
 import com.soulware.tcompro.shop.domain.model.commands.AddShopCommand;
+import com.soulware.tcompro.shop.domain.model.valueobjects.Coordinates;
 import com.soulware.tcompro.shop.domain.model.valueobjects.OwnerId;
 import com.soulware.tcompro.shop.domain.services.ShopCommandService;
 import com.soulware.tcompro.shop.infrastructure.persistence.jpa.repositories.OwnerRepository;
@@ -87,7 +88,9 @@ public class ShopCommandServiceImpl implements ShopCommandService {
                 owner.getId(),
                 paymentMethods,
                 pickupMethods,
-                new Money(maxCredit)
+                new Money(maxCredit),
+                new Coordinates(command.latitude(), command.longitude()),
+                command.name()
         );
 
         shopRepository.save(shop);

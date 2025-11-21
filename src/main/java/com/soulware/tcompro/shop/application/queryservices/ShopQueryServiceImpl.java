@@ -40,6 +40,6 @@ public class ShopQueryServiceImpl implements ShopQueryService {
 
     @Override
     public List<Shop> handle(GetShopsByProductsIdQuery query){
-        return shopRepository.findShopsWithAllCatalogProducts(query.productIds(),query.productIds().size());
+        return shopRepository.findNearbyShopsWithProducts(query.productIds(),query.productIds().size(), query.latitude(), query.longitude(), 1);
     }
 }

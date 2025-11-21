@@ -17,18 +17,33 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     Optional<Shop> findById(ShopId id);
 
     @Query(value = """
-    SELECT s.*
-    FROM shops s
-    WHERE s.id IN (
-        SELECT p.shop_id
-        FROM products p
-        WHERE p.catalog_product_id IN (:catalogProductIds)
-          AND p.is_available = true
-        GROUP BY p.shop_id
-        HAVING COUNT(DISTINCT p.catalog_product_id) = :size
+SELECT s.*
+FROM shops s
+WHERE s.id IN (
+    SELECT p.shop_id
+    FROM products p
+    WHERE p.catalog_product_id IN (:catalogProductIds)
+      AND p.is_available = true
+    GROUP BY p.shop_id
+    HAVING COUNT(DISTINCT p.catalog_product_id) = :size
+)
+AND (
+    6371 * acos(
+        cos(radians(:lat)) 
+        * cos(radians(s.latitude)) 
+        * cos(radians(s.longitude) - radians(:lng)) 
+        + sin(radians(:lat)) 
+        * sin(radians(s.latitude))
     )
-    """, nativeQuery = true)
-    List<Shop> findShopsWithAllCatalogProducts(@Param("catalogProductIds") List<Long> catalogProductIds,
-                                               @Param("size") int size);
+) <= :maxDistanceKm
+""", nativeQuery = true)
+    List<Shop> findNearbyShopsWithProducts(
+            @Param("catalogProductIds") List<Long> catalogProductIds,
+            @Param("size") int size,
+            @Param("lat") double latitude,
+            @Param("lng") double longitude,
+            @Param("maxDistanceKm") double maxDistanceKm
+    );
+
 
 }

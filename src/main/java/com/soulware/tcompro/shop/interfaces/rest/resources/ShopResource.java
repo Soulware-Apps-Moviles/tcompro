@@ -8,6 +8,9 @@ public record ShopResource(
         Long ownerId,
         List<String> paymentMethods,
         List<String> pickupMethods,
-        BigDecimal maxCreditPerCustomer
+        BigDecimal maxCreditPerCustomer,
+        double latitude,
+        double longitude,
+        String name
 ) {
 }

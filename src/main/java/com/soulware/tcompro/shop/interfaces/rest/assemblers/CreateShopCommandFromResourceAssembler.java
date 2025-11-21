@@ -9,7 +9,10 @@ public class CreateShopCommandFromResourceAssembler {
                 resource.OwnerId(),
                 resource.paymentMethods(),
                 resource.pickupMethods(),
-                resource.maxCreditPerCustomer()
+                resource.maxCreditPerCustomer(),
+                resource.latitude(),
+                resource.longitude(),
+                resource.name()
         );
     }
 }

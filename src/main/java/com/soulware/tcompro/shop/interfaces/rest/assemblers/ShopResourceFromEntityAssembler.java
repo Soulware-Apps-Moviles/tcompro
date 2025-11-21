@@ -25,7 +25,10 @@ public class ShopResourceFromEntityAssembler {
                 entity.getOwner().getValue(),
                 paymentMethodNames,
                 pickupMethodNames,
-                entity.getMaxCreditPerCustomer().amount()
+                entity.getMaxCreditPerCustomer().amount(),
+                entity.getCoordinates().latitude(),
+                entity.getCoordinates().longitude(),
+                entity.getName()
         );
     }
 }

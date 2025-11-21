@@ -81,7 +81,7 @@ public class ShopController {
             @ApiResponse(responseCode = "200", description = "Shop found")
     })
     public ResponseEntity<List<ShopResource>> getShopsByProducts(@RequestBody ProductListResource resource){
-        var query  = new GetShopsByProductsIdQuery(resource.ids());
+        var query  = new GetShopsByProductsIdQuery(resource.ids(), resource.latitude(), resource.longitude());
         List<Shop> shops = shopQueryService
                 .handle(query);
         List<ShopResource> resources = shops.stream()
