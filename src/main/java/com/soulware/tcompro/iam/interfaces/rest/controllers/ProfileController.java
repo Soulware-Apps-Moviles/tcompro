@@ -2,6 +2,7 @@ package com.soulware.tcompro.iam.interfaces.rest.controllers;
 
 import com.soulware.tcompro.iam.domain.model.entities.Role;
 import com.soulware.tcompro.iam.domain.model.queries.GetByAuthIdAndRoleQuery;
+import com.soulware.tcompro.iam.domain.model.valueobjects.Roles;
 import com.soulware.tcompro.iam.domain.services.ProfileCommandService;
 import com.soulware.tcompro.iam.domain.services.ProfileQueryService;
 import com.soulware.tcompro.iam.interfaces.rest.assemblers.ProfileResourceFromEntityAssembler;
@@ -53,7 +54,7 @@ public class ProfileController {
             @ApiResponse(responseCode = "200", description = "Profile found"),
             @ApiResponse(responseCode = "404", description = "Profile not found")
     })
-    public ResponseEntity<ProfileResource> getProfile(@PathVariable UUID authId, @RequestParam Role role) {
+    public ResponseEntity<ProfileResource> getProfile(@PathVariable UUID authId, @RequestParam Roles role) {
         var query = new GetByAuthIdAndRoleQuery(authId, role);
         var profile = profileQueryService.handle(query);
 

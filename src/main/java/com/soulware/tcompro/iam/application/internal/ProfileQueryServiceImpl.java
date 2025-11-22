@@ -33,7 +33,7 @@ public class ProfileQueryServiceImpl implements ProfileQueryService {
     @Transactional(readOnly = true)
     public Optional<Profile> handle(GetByAuthIdAndRoleQuery query) {
         AuthId authId = new AuthId(query.authId());
-        Roles roleName = query.role().getName();
+        Roles roleName = query.role();
 
         return switch (roleName) {
             case CUSTOMER -> customerRepository.findByAuthId(authId)
