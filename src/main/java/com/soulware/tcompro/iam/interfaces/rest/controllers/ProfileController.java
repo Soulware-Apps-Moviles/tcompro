@@ -1,6 +1,9 @@
 package com.soulware.tcompro.iam.interfaces.rest.controllers;
 
+import com.soulware.tcompro.iam.domain.model.entities.Role;
+import com.soulware.tcompro.iam.domain.model.queries.GetByAuthIdAndRoleQuery;
 import com.soulware.tcompro.iam.domain.services.ProfileCommandService;
+import com.soulware.tcompro.iam.domain.services.ProfileQueryService;
 import com.soulware.tcompro.iam.interfaces.rest.assemblers.ProfileResourceFromEntityAssembler;
 import com.soulware.tcompro.iam.interfaces.rest.assemblers.SignUpCommandFromResourceAssembler;
 import com.soulware.tcompro.iam.interfaces.rest.resources.ProfileResource;
@@ -12,19 +15,20 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/profile/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Profile", description = "Profile endpoints")
 public class ProfileController {
     private final ProfileCommandService profileCommandService;
+    private final ProfileQueryService profileQueryService;
 
-    public ProfileController(ProfileCommandService profileCommandService) {
+    public ProfileController(ProfileCommandService profileCommandService, ProfileQueryService profileQueryService) {
         this.profileCommandService = profileCommandService;
+        this.profileQueryService = profileQueryService;
     }
 
     @PostMapping
@@ -41,5 +45,22 @@ public class ProfileController {
         }
         var resource = ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
+    }
+
+    @GetMapping("by-auth-id/{authId}")
+    @Operation(summary = "Get Profile", description = "Get a user profile by Auth ID and Role")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile found"),
+            @ApiResponse(responseCode = "404", description = "Profile not found")
+    })
+    public ResponseEntity<ProfileResource> getProfile(@PathVariable UUID authId, @RequestParam Role role) {
+        var query = new GetByAuthIdAndRoleQuery(authId, role);
+        var profile = profileQueryService.handle(query);
+
+        return profile
+                .map(entity -> ResponseEntity.ok(
+                        ProfileResourceFromEntityAssembler.toResourceFromEntity(entity)
+                ))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

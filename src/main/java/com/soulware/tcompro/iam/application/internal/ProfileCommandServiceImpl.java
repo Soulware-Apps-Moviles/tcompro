@@ -101,6 +101,4 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
                 shopkeeperRepository.findByEmail(email).isPresent() ||
                 ownerRepository.findByEmail(email).isPresent();
     }
-
-
 }
